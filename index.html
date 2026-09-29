@@ -144,6 +144,9 @@ section{padding-block:56px}
 footer{border-top:1px solid var(--line);padding-block:26px 40px;color:var(--dim);font-size:13px}
 footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
+.foot-l,.foot-r{display:flex;flex-direction:column;gap:6px}
+.foot-r{align-items:flex-start}
+.foot-r .btn{padding:9px 16px;font-size:14px}
 @media (prefers-reduced-motion:reduce){.lan{animation:none}html{scroll-behavior:auto}}
 </style>
 
@@ -267,16 +270,24 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
 </main>
 
 <footer>
-  <div class="wrap"><b>MIO GAME MARKET</b><span>© ミオのゲームアプリ販売所</span></div>
+  <div class="wrap">
+    <div class="foot-l"><b>MIO GAME MARKET</b><span>© ミオのゲームアプリ販売所</span></div>
+    <div class="foot-r"><span>広告・取材・掲載のご相談</span><a class="btn sub" id="contactBtn" href="#top" aria-disabled="true">お問い合わせ 準備中</a></div>
+  </div>
 </footer>
 
 <script>
 /* ===== 設定：感想フォームのURL（Googleフォームなど）を入れると「感想を送る」ボタンが使えるようになる ===== */
+/* お問い合わせフォーム（広告・取材など）のURL */
+const CONTACT_URL='';
 const FEEDBACK_URL='https://docs.google.com/forms/d/1jjGtsflNr9svG_j2bN4F_AuUwkKUy0G1g10yJRQ6TNo/viewform';
 (()=>{
   const b=document.getElementById('feedbackBtn');
   if(FEEDBACK_URL){b.href=FEEDBACK_URL;b.target='_blank';b.rel='noopener';b.textContent='感想を送る';b.removeAttribute('aria-disabled');}
   else b.addEventListener('click',e=>e.preventDefault());
+  const c=document.getElementById('contactBtn');
+  if(CONTACT_URL){c.href=CONTACT_URL;c.target='_blank';c.rel='noopener';c.textContent='お問い合わせ';c.removeAttribute('aria-disabled');}
+  else c.addEventListener('click',e=>e.preventDefault());
 
   /* キービジュアル：夜の草原と 七つの灯 */
   const cv=document.getElementById('keyart'),ctx=cv.getContext('2d');
