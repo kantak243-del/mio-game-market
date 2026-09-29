@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;padding:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>七つの灯 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --page:#05070C; --win:#000000; --edge:#FFFFFF; --ink:#FFFFFF; --muted:#A9B4C2;
+  --low:#F5A623; --dead:#E0413A; --hot:#FFD34D; --good:#5BE08A;
+  --fire:#FF7A4D; --water:#62B2FF; --earth:#D9A65E; --wind:#55E0B4; --light:#FFF1A8; --enemy:#C9A3FF;
+  --font:"DotGothic16","MS Gothic","Osaka-Mono",monospace;
+}
+*{box-sizing:border-box}
+html,body{background:var(--page)}
+body{color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.45;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:480px;margin:0 auto;padding-inline:12px;padding-block:10px 16px;display:flex;flex-direction:column;gap:8px}
+.win{background:var(--win);border:3px solid var(--edge);border-radius:8px;box-shadow:0 0 0 2px var(--win);padding:6px 9px}
+.status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.st{padding:5px 6px;font-size:13px;line-height:1.35}
+.st.empty{visibility:hidden}
+.st .nm{border-bottom:1px solid #FFFFFF55;margin-bottom:2px;white-space:nowrap;overflow:hidden}
+.st .row{display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.st .el{font-size:11px}
+.st .lvrow{color:var(--hot)}
+.st.low{color:var(--low);border-color:var(--low)}
+.st.dead{color:var(--dead);border-color:var(--dead)}
+.st.hit{animation:hit .3s}
+@keyframes hit{0%,100%{transform:none}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+.lvbar{display:flex;align-items:center;gap:8px;font-size:13px;padding:4px 9px}
+.lvbar .exp{flex:1;height:8px;border:2px solid var(--edge);border-radius:4px;background:#000}
+.lvbar .exp i{display:block;height:100%;background:var(--hot)}
+.field-box{position:relative;border:3px solid var(--edge);border-radius:8px;overflow:hidden;background:#000;touch-action:none}
+canvas#map{position:absolute;inset:0;display:block;width:100%;height:100%;opacity:0;z-index:2;touch-action:none}
+#gl3,#ov3{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ov3{pointer-events:none;z-index:1}
+.field-box .hint{z-index:3}
+.hint{position:absolute;left:8px;bottom:8px;font-size:11px;color:#FFFFFFCC;background:#000000AA;border-radius:4px;padding:2px 6px;pointer-events:none}
+.msg{min-height:92px;font-size:14px;display:flex;flex-direction:column;gap:1px;cursor:pointer}
+.msg .who{color:var(--hot)}
+.msg .next{align-self:flex-end;font-size:12px;animation:blink 1s steps(2) infinite}
+body.dusk #gl3,body.dusk #scene{filter:saturate(.12) brightness(.92)}
+.msg .choices{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#fmsg .chbtn{flex:1 1 44%;background:#000;color:#fff;border:2px solid #fff;border-radius:8px;padding:10px 6px;font:inherit;font-size:15px;text-align:left}
+#fmsg .chbtn:active{background:#333}
+@keyframes blink{50%{opacity:0}}
+.hot{color:var(--hot)} .dim{color:var(--muted)}
+.tut{color:#9FD8FF;font-size:13px;border-bottom:1px solid #FFFFFF33;padding-bottom:4px;margin-bottom:4px}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ctrl{display:grid;grid-template-columns:150px 1fr;gap:12px;align-items:center}
+.ctrlbtns{display:flex;flex-direction:column;gap:10px}
+.dpad{position:relative;width:150px;height:150px;touch-action:none;-webkit-user-select:none;user-select:none}
+.dpad .arm{position:absolute;background:#000;border:3px solid var(--edge);border-radius:10px}
+.dpad .arm.v{left:50px;top:0;width:50px;height:150px}
+.dpad .arm.h{left:0;top:50px;width:150px;height:50px}
+.dpad .hub{position:absolute;left:53px;top:53px;width:44px;height:44px;background:#000}
+.dpad .ar{position:absolute;width:50px;height:50px;display:grid;place-items:center;font-size:18px;color:var(--ink);pointer-events:none}
+.dpad .ar.u{left:50px;top:0}.dpad .ar.d{left:50px;top:100px}.dpad .ar.l{left:0;top:50px}.dpad .ar.r{left:100px;top:50px}
+.dpad .ar.on{color:var(--hot)}
+.ctrl.menuon .dpad{visibility:hidden}
+.bigbtn{font:inherit;font-size:17px;color:var(--ink);background:var(--win);border:3px solid var(--edge);border-radius:8px;padding:12px 6px;cursor:pointer}
+.bigbtn:active{background:#222}
+.bigbtn:disabled{color:#666;border-color:#666}
+.scene{position:relative;height:200px;border:3px solid var(--edge);border-radius:8px;overflow:hidden}
+.scene svg.bg{position:absolute;inset:0;width:100%;height:100%}
+.foe{position:absolute;left:50%;bottom:14px;width:150px;margin-left:-75px;transition:filter .2s,opacity .8s}
+.foe.shake{animation:shake .35s}
+.foe.flash{filter:brightness(2.4)}
+.foe.gone{opacity:0}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.foe-tag{position:absolute;left:8px;top:8px;background:#000000CC;border:2px solid var(--edge);border-radius:6px;padding:2px 8px;font-size:13px}
+.foe-tag .angry{color:var(--dead)}
+.foe-hp{position:absolute;right:8px;top:10px;width:120px;height:10px;border:2px solid var(--edge);border-radius:4px;background:#000}
+.foe-hp i{display:block;height:100%;background:var(--enemy);transition:width .35s}
+.pop{position:absolute;left:50%;top:44%;transform:translateX(-50%);font-size:26px;color:var(--ink);text-shadow:2px 2px 0 #000,-2px -2px 0 #000,2px -2px 0 #000,-2px 2px 0 #000;pointer-events:none;white-space:nowrap;animation:pop .95s ease-out forwards}
+.pop.big{color:var(--hot);font-size:28px}
+@keyframes pop{0%{opacity:0;margin-top:10px}15%{opacity:1}100%{opacity:0;margin-top:-34px}}
+.tl-win{padding:6px 7px}
+.tl-title{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px}
+.tl-title b{color:var(--hot);font-weight:400}
+.tl{display:grid;gap:4px}
+.cell{min-height:70px;border:1px dashed #FFFFFF55;border-radius:5px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;text-align:center;font-size:12px;cursor:pointer;background:transparent;color:var(--ink);font-family:var(--font)}
+.cell .no{font-size:11px;color:var(--muted)}
+.cell .res{font-size:10px;color:var(--muted)}
+.cell.filled{border:1px solid var(--ec,#FFF)}
+.cell.filled .cmd{color:var(--ec,#FFF)}
+.cell.foecell{border:1px solid #C9A3FF88;cursor:default}
+.cell.foecell .who{color:var(--enemy)}
+.cell.active{outline:2px solid var(--hot);outline-offset:1px}
+.tag{margin-top:auto;font-size:10px;line-height:1.25;border-radius:3px;padding:1px 3px;word-break:break-all}
+.tag.fusion{background:var(--hot);color:#000}
+.tag.break{background:var(--low);color:#000}
+.tag.react{border:1px solid var(--water);color:var(--water)}
+.tag.good{border:1px solid var(--good);color:var(--good)}
+.tag.bad{border:1px solid var(--dead);color:var(--dead)}
+.e-火{--ec:var(--fire)} .e-水{--ec:var(--water)} .e-土{--ec:var(--earth)} .e-風{--ec:var(--wind)} .e-光{--ec:var(--light)} .e-氷{--ec:#BDEBFF} .e-闇{--ec:#B08CFF}
+.bottom{display:grid;grid-template-columns:1fr 118px;gap:8px}
+.menu{min-height:176px;display:flex;flex-direction:column}
+.menu .q{margin-bottom:4px}
+.opt{display:flex;align-items:baseline;gap:6px;width:100%;text-align:left;font:inherit;font-size:16px;color:var(--ink);background:none;border:0;padding:6px 2px 6px 18px;cursor:pointer;position:relative}
+.opt small{font-size:11px;color:var(--muted)}
+.opt::before{content:"▶";position:absolute;left:0;top:7px;font-size:13px;opacity:0}
+.opt:hover::before,.opt:focus-visible::before{opacity:1}
+.opt:focus-visible{outline:none;background:#FFFFFF1A}
+.opt:disabled{color:#666;cursor:default}
+.opt .ec{color:var(--ec)}
+.opt.on{color:var(--hot)}
+.side{display:flex;flex-direction:column;padding:4px 6px}
+.side .opt{font-size:14px;padding-block:7px}
+.loot{border:2px solid var(--rc);border-radius:6px;padding:6px 8px;margin:4px 0}
+.loot .r{color:var(--rc);font-size:12px}
+.loot ul{margin:4px 0 0;padding-left:16px;font-size:13px}
+.panel{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.panel h3{font-weight:400;font-size:15px;margin:2px 0;color:var(--hot)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid #FFFFFF44;border-radius:6px;padding:6px 8px;cursor:pointer;background:none;color:var(--ink);font:inherit;text-align:left;width:100%}
+.item.eq{border-color:var(--hot)}
+.item small{color:var(--muted);font-size:11px}
+.item[disabled]{color:#666}
+.tabs{display:grid;gap:4px}
+.tab{font:inherit;font-size:14px;color:var(--ink);background:none;border:2px solid #FFFFFF55;border-radius:6px;padding:6px 2px;cursor:pointer}
+.tab.on{border-color:var(--hot);color:var(--hot)}
+.sheet{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;border-bottom:1px solid #FFFFFF44;padding-bottom:6px}
+.sheet small{color:var(--muted)}
+.up{color:var(--good)} .down{color:var(--dead)}
+.eqmark{color:var(--hot);margin-right:4px}
+.optline{font-size:11px;color:var(--muted);margin:-3px 0 2px 10px}
+.stbl{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.stbl th{color:var(--muted);font-weight:400;text-align:right}
+.stbl td{text-align:right;padding:3px 2px;border-top:1px solid #FFFFFF22}
+.stbl td:first-child{text-align:left}
+.dex span{margin-right:6px;color:var(--muted)} .dex .got{color:var(--hot)}
+.titlev{display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:60px 30px;text-align:center}
+.titlev h1{font-weight:400;font-size:44px;color:var(--hot);margin:0;letter-spacing:.08em}
+.titlev .sub{color:var(--muted);font-size:14px}
+.titlev .win{width:100%;max-width:280px}
+
+#fightBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#fightBtns .bigbtn{padding:10px 4px;font-size:16px;display:flex;flex-direction:column;align-items:center;gap:2px}
+#fightBtns .bigbtn small{font-size:11px;color:var(--hot);letter-spacing:.1em}
+#fightBtns .bigbtn.ready{border-color:var(--hot);color:var(--hot);box-shadow:0 0 10px #FFD34D66}
+#fightBtns .bigbtn.on{border-color:#9FD8FF;color:#9FD8FF}
+#fcmd{display:flex;flex-direction:column;gap:4px;border-color:var(--hot)}
+#fcmd .fch{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+#fcmd .fcl{display:grid;grid-template-columns:1fr 1fr;gap:2px 6px;max-height:230px;overflow:auto}
+#fcmd .fcb{flex-direction:column;align-items:flex-start;gap:0;font-size:15px;padding:5px 2px 5px 16px}
+#fcmd .fcb.on{color:var(--ink)} #fcmd .fcb.on small{color:var(--hot)}
+#fres{position:absolute;left:10px;right:10px;bottom:10px;z-index:4;font-size:14px;display:flex;flex-direction:column;gap:4px}
+@media (prefers-reduced-motion: reduce){.foe.shake,.st.hit{animation:none}.pop{animation:none;opacity:1}.msg .next{animation:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+  <section id="titleView" class="titlev">
+    <h1>七つの灯</h1>
+    <div class="sub">― Seven Lights ―　3D</div>
+    <div class="win" id="titleMenu"></div>
+  </section>
+
+  <div id="topbar" hidden style="display:flex;flex-direction:column;gap:8px">
+    <div class="status" id="status"></div>
+    <div class="win lvbar"><span id="lv">Lv1</span><span class="exp"><i id="expbar"></i></span><span id="bread" style="font-size:12px;color:var(--muted)"></span></div>
+  </div>
+
+  <section id="fieldView" hidden style="display:flex;flex-direction:column;gap:8px">
+    <div class="field-box" id="fieldBox">
+      <canvas id="map" aria-label="フィールド"></canvas>
+      <div class="hint" id="hint">十字キーか 画面をなぞって 歩く</div>
+    </div>
+    <div class="win msg" id="fmsg" aria-live="polite"></div>
+    <div class="ctrl" id="ctrl">
+      <div class="dpad" id="dpad" aria-label="十字キー">
+        <div class="arm v"></div><div class="arm h"></div><div class="hub"></div>
+        <span class="ar u" data-d="u">▲</span><span class="ar d" data-d="d">▼</span><span class="ar l" data-d="l">◀</span><span class="ar r" data-d="r">▶</span>
+      </div>
+      <div class="ctrlbtns">
+        <button class="bigbtn" id="talkBtn">しらべる</button>
+        <button class="bigbtn" id="menuBtn">メニュー</button>
+      </div>
+    </div>
+    <div class="win panel" id="menuPanel" hidden></div>
+  </section>
+
+  <section id="battleView" hidden style="display:flex;flex-direction:column;gap:8px">
+    <div class="scene" id="scene">
+      <svg class="bg" id="bgsvg" viewBox="0 0 360 200" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+      <div class="foe-tag"><span id="foeName"></span> <span class="angry" id="angry" hidden>怒</span></div>
+      <div class="foe-hp" aria-hidden="true"><i id="ehpbar"></i></div>
+      <svg class="foe" id="foe" viewBox="0 0 150 120"></svg>
+    </div>
+    <div class="win tl-win">
+      <div class="tl-title"><span>こうどうじゅん（敵の行動も見える）</span><b id="preview"></b></div>
+      <div class="tl" id="tl"></div>
+    </div>
+    <div class="win msg" id="bmsg" aria-live="polite"></div>
+    <div class="bottom">
+      <div class="win menu" id="bmenu"></div>
+      <div class="win side">
+        <button class="opt" id="aiBtn">おまかせ</button>
+        <button class="opt" id="autoBtn">オート</button>
+        <button class="opt" id="modeBtn">作戦:火力</button>
+        <button class="opt" id="clrBtn">やりなおす</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/maps.js"></script>
+<script src="js/story.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/battle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/field3d.js"></script>
+<script src="js/fight3d.js"></script>
+<script src="js/main.js"></script>
+
+
+</body>
+</html>
