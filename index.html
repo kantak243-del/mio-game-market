@@ -68,9 +68,12 @@ nav a:hover,nav a:focus-visible{color:var(--lantern)}
 .btn[aria-disabled="true"]{opacity:.5;cursor:default;box-shadow:none}
 .btn:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--mio);outline-offset:3px}
 
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px;align-items:center}
+.mio-photo{width:100%;max-width:100%;aspect-ratio:1;height:auto;border-radius:50%;object-fit:cover;box-shadow:0 0 0 5px var(--night),0 0 0 9px var(--mio),0 0 50px rgba(255,111,145,.45)}
+@media (max-width:720px){.hero-grid{grid-template-columns:1fr;gap:8px}.mio-photo{order:-1;width:140px;justify-self:end;margin:-8px 4px 0 0}}
 /* ミオのひとこと */
 .mio-say{display:flex;gap:12px;align-items:flex-start;margin-top:28px;max-width:560px}
-.mio-face{flex:none;width:52px;height:52px;border-radius:50%;background:var(--mio);display:grid;place-items:center;font-family:var(--round);font-weight:800;font-size:22px;color:#fff;box-shadow:0 0 0 3px var(--night),0 0 0 5px var(--mio)}
+.mio-face{flex:none;width:52px;height:52px;border-radius:50%;object-fit:cover;background:var(--mio);display:grid;place-items:center;font-family:var(--round);font-weight:800;font-size:22px;color:#fff;box-shadow:0 0 0 3px var(--night),0 0 0 5px var(--mio)}
 .bubble{background:var(--paper);color:#3A2A18;border-radius:4px 16px 16px 16px;padding:10px 14px;font-size:14.5px;line-height:1.7}
 .bubble b{color:#C2385C}
 
@@ -166,7 +169,8 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
       <svg viewBox="0 0 100 20" preserveAspectRatio="none"><path d="M0 4 Q25 16 50 10 T100 4" fill="none" stroke="#5A4E86" stroke-width=".5"/></svg>
       <div class="lanterns"><i class="lan"></i><i class="lan"></i><i class="lan"></i><i class="lan mio"></i><i class="lan"></i><i class="lan"></i><i class="lan"></i></div>
     </div>
-    <div class="wrap">
+    <div class="wrap hero-grid">
+      <div>
       <h1><span class="en">MIO GAME MARKET</span>ミオの<br>ゲームアプリ販売所</h1>
       <p class="catch">あなたの「作ってみた」を、<br>誰かの「<em>楽しい！</em>」へ。</p>
       <p class="lead">AIといっしょに作った<strong>スマホゲーム</strong>の小さなお店。まずは<strong>体験版</strong>を並べて、遊んだ人の感想で少しずつ良くしていきます。</p>
@@ -175,9 +179,11 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
         <a class="btn sub" href="#grow">このお店のしくみ</a>
       </div>
       <div class="mio-say">
-        <div class="mio-face" aria-hidden="true">ミ</div>
+        <img class="mio-face" src="img/mio-icon.jpg" alt="" width="52" height="52">
         <div class="bubble"><b>ミオ</b>：いらっしゃいませ！ 今は<b>プレオープン</b>だから、ぜんぶ無料で遊べるよ。遊んだら、感想を聞かせてね。</div>
       </div>
+      </div>
+      <img class="mio-photo" src="img/mio.jpg" alt="店長のミオ" width="480" height="480">
     </div>
   </div>
 
