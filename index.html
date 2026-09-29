@@ -263,7 +263,7 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
 
 <script>
 /* ===== 設定：感想フォームのURL（Googleフォームなど）を入れると「感想を送る」ボタンが使えるようになる ===== */
-const FEEDBACK_URL='';
+const FEEDBACK_URL='https://docs.google.com/forms/d/1jjGtsflNr9svG_j2bN4F_AuUwkKUy0G1g10yJRQ6TNo/viewform';
 (()=>{
   const b=document.getElementById('feedbackBtn');
   if(FEEDBACK_URL){b.href=FEEDBACK_URL;b.target='_blank';b.rel='noopener';b.textContent='感想を送る';b.removeAttribute('aria-disabled');}
