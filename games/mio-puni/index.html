@@ -16,7 +16,7 @@ header{display:flex;align-items:center;gap:8px}
 .stat small{display:block;font-size:11px;color:var(--dim)}
 .stat b{font-size:18px;font-variant-numeric:tabular-nums}
 #next{display:flex;flex-direction:column;align-items:center;padding:4px 8px}
-#next canvas{width:44px;height:30px}
+#next{flex-direction:row;gap:4px}#next small{writing-mode:vertical-rl;letter-spacing:.1em}#next canvas{width:26px;height:40px}
 .icon{margin-left:auto;display:flex;gap:6px}
 .icon button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:18px}
 #stage{position:relative;flex:1 1 auto;min-height:0;display:flex;justify-content:center;align-items:center}
@@ -43,7 +43,7 @@ a.sub{text-decoration:none;display:inline-block}
   <header>
     <div class="stat"><small>スコア</small><b id="score">0</b></div>
     <div class="stat"><small>ベスト</small><b id="best">0</b></div>
-    <div class="stat" id="next"><small>つぎ</small><canvas id="nextCv" width="88" height="60"></canvas></div>
+    <div class="stat" id="next"><small>つぎ</small><canvas id="nextCv" width="64" height="100"></canvas></div>
     <div class="icon">
       <button id="sndBtn" type="button" aria-label="音のオン・オフ">♪</button>
       <button id="pauseBtn" type="button" aria-label="一時停止">Ⅱ</button>
@@ -127,7 +127,7 @@ function updSnd(){$("sndBtn").textContent=soundOn?"♪":"×";$("sndBtn").style.o
 let grid,piece,nextQ,score,state="title",paused=false,fallT=0,lockT=0,chain=0,maxChain=0,popping=[],particles=[],texts=[],shake=0,softDrop=false,totalPops=0;
 const rnd=()=>1+(Math.random()*4|0);
 const OFF=[[0,-1],[1,0],[0,1],[-1,0]];
-function newPiece(){const p=nextQ.shift();nextQ.push([rnd(),rnd()]);return {x:2,y:0,rot:0,a:p[0],b:p[1]};}
+function newPiece(){const p=nextQ.shift();nextQ.push([rnd(),rnd()]);const np={x:2,y:0,rot:0,a:p[0],b:p[1]};piece=np;drawNext();return np;}
 function cellsOf(p){const o=OFF[p.rot];return [[p.x,p.y,p.a],[p.x+o[0],p.y+o[1],p.b]];}
 function free(x,y){if(x<0||x>=COLS||y>=ROWS)return false;if(y<0)return true;return !grid[y][x];}
 function fits(p){return cellsOf(p).every(([x,y])=>free(x,y));}
@@ -258,8 +258,8 @@ function heart(g,cx,cy,s,col){
   g.restore();
 }
 function drawNext(){
-  nctx.clearRect(0,0,88,60);if(!nextQ)return;const [a,b]=nextQ[0];
-  heart(nctx,26,32,40,b);heart(nctx,62,32,40,a);
+  nctx.clearRect(0,0,64,100);if(!nextQ)return;const [a,b]=nextQ[0];
+  heart(nctx,32,27,46,b);heart(nctx,32,73,46,a);
 }
 function draw(){
   const W=COLS*CS,H=ROWS*CS;
@@ -336,7 +336,7 @@ $("startBtn").onclick=start;$("againBtn").onclick=start;
 updSnd();$("best").textContent=best.toLocaleString();
 grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));nextQ=[[2,1],[3,4]];drawNext();
 fit();requestAnimationFrame(frame);
-window.__puni={get state(){return state;},get score(){return score;},get grid(){return grid;},get piece(){return piece;},get paused(){return paused;},hardDrop,tryMove,tryRot,setGrid(g){grid=g;}};
+window.__puni={get state(){return state;},get score(){return score;},get grid(){return grid;},get piece(){return piece;},get paused(){return paused;},get next(){return nextQ[0];},hardDrop,tryMove,tryRot,setGrid(g){grid=g;}};
 })();
 </script>
 </body>
