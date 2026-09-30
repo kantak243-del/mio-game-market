@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#111b3b">
+<title>ミオぷにパズル</title>
+<style>
+:root{--bg:#111b3b;--panel:#1b2754;--line:#34427a;--ink:#f4f1ff;--dim:#a9b3dc;--gold:#ffd45c;--pink:#ff8ac8}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Hiragino Maru Gothic ProN","Rounded Mplus 1c","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#app{height:100%;display:flex;flex-direction:column;padding:max(8px,env(safe-area-inset-top)) 12px max(10px,env(safe-area-inset-bottom));gap:8px;max-width:480px;margin:0 auto}
+header{display:flex;align-items:center;gap:8px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:4px 10px;min-width:0}
+.stat small{display:block;font-size:11px;color:var(--dim)}
+.stat b{font-size:18px;font-variant-numeric:tabular-nums}
+#next{display:flex;flex-direction:column;align-items:center;padding:4px 8px}
+#next canvas{width:44px;height:30px}
+.icon{margin-left:auto;display:flex;gap:6px}
+.icon button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:18px}
+#stage{position:relative;flex:1 1 auto;min-height:0;display:flex;justify-content:center;align-items:center}
+#board{display:block;background:#0c1430;border:2px solid var(--line);border-radius:14px}
+#pad{display:grid;grid-template-columns:repeat(3,1fr) 12px repeat(2,1fr);gap:8px}
+#pad button{height:62px;border-radius:16px;border:0;background:#2a3a78;color:#fff;font-size:24px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.3);touch-action:none}
+#pad button.on{background:#3d52a3;box-shadow:inset 0 3px 0 rgba(0,0,0,.3)}
+#pad button small{display:block;font-size:10px;opacity:.8;margin-top:-2px}
+#pad .gap{visibility:hidden}
+#bHard{background:#8a3a6c!important}
+.ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(8,12,30,.88);border-radius:14px;text-align:center;padding:20px}
+.ov[hidden]{display:none}
+.ov h1{margin:0;font-size:30px;color:var(--pink);text-shadow:0 3px 0 #3a1240}
+.ov h2{margin:0;font-size:24px}
+.ov p{margin:0;color:var(--dim);font-size:14px;line-height:1.7}
+.big{min-width:200px;padding:14px 24px;border-radius:16px;border:0;font-size:18px;font-weight:700;background:var(--gold);color:#3a2a00;box-shadow:inset 0 -5px 0 rgba(0,0,0,.2)}
+.sub{min-width:200px;padding:11px 20px;border-radius:14px;border:1px solid var(--line);font-size:15px;background:var(--panel);color:var(--ink)}
+.how{font-size:13px;color:var(--dim);text-align:left;line-height:1.8}
+a.sub{text-decoration:none;display:inline-block}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <div class="stat"><small>スコア</small><b id="score">0</b></div>
+    <div class="stat"><small>ベスト</small><b id="best">0</b></div>
+    <div class="stat" id="next"><small>つぎ</small><canvas id="nextCv" width="88" height="60"></canvas></div>
+    <div class="icon">
+      <button id="sndBtn" type="button" aria-label="音のオン・オフ">♪</button>
+      <button id="pauseBtn" type="button" aria-label="一時停止">Ⅱ</button>
+    </div>
+  </header>
+  <div id="stage">
+    <canvas id="board"></canvas>
+    <div class="ov" id="title">
+      <h1>ミオぷにパズル</h1>
+      <p>同じ色のぷにを<b>4つ</b>つなげると消えるよ。<br>消えたあとに落ちてまた消えると<b>連鎖</b>！</p>
+      <div class="how">◀ ▶ 移動　↻ 回転<br>↓ 押している間だけ速く落ちる<br>⤓ 一気に落とす</div>
+      <button class="big" id="startBtn" type="button">あそぶ</button>
+    </div>
+    <div class="ov" id="pauseOv" hidden>
+      <h2>一時停止中</h2>
+      <button class="big" id="resumeBtn" type="button">つづける</button>
+      <button class="sub" id="restartBtn" type="button">最初からやり直す</button>
+      <a class="sub" href="../../index.html">お店にもどる</a>
+    </div>
+    <div class="ov" id="confirmOv" hidden>
+      <h2>やり直しますか？</h2>
+      <p>今のスコアは消えてしまいます。</p>
+      <button class="sub" id="noBtn" type="button">いいえ、つづける</button>
+      <button class="big" id="yesBtn" type="button">はい、やり直す</button>
+    </div>
+    <div class="ov" id="overOv" hidden>
+      <h1>ゲームオーバー</h1>
+      <p id="overTxt"></p>
+      <button class="big" id="againBtn" type="button">もう一度あそぶ</button>
+      <a class="sub" href="../../index.html">お店にもどる</a>
+    </div>
+  </div>
+  <div id="pad">
+    <button id="bL" type="button" aria-label="左">◀</button>
+    <button id="bRot" type="button" aria-label="回転">↻</button>
+    <button id="bR" type="button" aria-label="右">▶</button>
+    <span class="gap"></span>
+    <button id="bDown" type="button" aria-label="速く落とす">↓<small>はやく</small></button>
+    <button id="bHard" type="button" aria-label="一気に落とす">⤓<small>いっき</small></button>
+  </div>
+</div>
+<script>
+(()=>{
+"use strict";
+const COLS=6,ROWS=12;
+const COLORS=[null,{f:"#6fd3ff",d:"#2d8fc0"},{f:"#ff8ac8",d:"#c2468a"},{f:"#ffd45c",d:"#c29320"},{f:"#7be39a",d:"#2f9e56"}];
+const $=id=>document.getElementById(id);
+const cv=$("board"),ctx=cv.getContext("2d"),ncv=$("nextCv"),nctx=ncv.getContext("2d");
+let CS=40,DPR=1;
+
+/* ---------- storage ---------- */
+const load=(k,d)=>{try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}};
+const store=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
+let best=load("mio-puni-best",0), soundOn=load("mio-puni-sound",true);
+
+/* ---------- sound ---------- */
+let AC=null,bgmTimer=null,bgmStep=0;
+function audio(){if(!AC){try{AC=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}if(AC&&AC.state==="suspended")AC.resume();}
+function tone(f,d,type="sine",vol=.12,when=0,slide=0){
+  if(!AC||!soundOn)return;const t=AC.currentTime+when,o=AC.createOscillator(),g=AC.createGain();
+  o.type=type;o.frequency.setValueAtTime(f,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f+slide),t+d);
+  g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.02);
+}
+const SFX={
+  move:()=>tone(660,.05,"triangle",.05),
+  rot:()=>tone(880,.06,"triangle",.06,0,200),
+  land:()=>tone(180,.1,"sine",.12,0,-60),
+  pop:(ch)=>{const base=[523,587,659,784,880,988,1047][Math.min(ch-1,6)];tone(base,.18,"square",.07);tone(base*1.5,.22,"triangle",.07,.06);},
+  over:()=>[523,440,349,262].forEach((f,i)=>tone(f,.35,"triangle",.1,i*.18)),
+};
+const MEL=[659,0,784,0,880,784,659,0,587,0,659,0,523,0,0,0, 659,0,784,0,988,880,784,0,880,0,784,0,659,0,0,0];
+const BASS=[131,131,165,165,196,196,165,165];
+function bgmStart(){if(bgmTimer)return;bgmTimer=setInterval(()=>{
+  if(!AC||!soundOn||state!=="play"&&state!=="resolve")return;
+  const n=MEL[bgmStep%MEL.length];if(n)tone(n,.18,"triangle",.035);
+  if(bgmStep%4===0)tone(BASS[(bgmStep/4|0)%BASS.length],.3,"sine",.05);
+  bgmStep++;},180);}
+function updSnd(){$("sndBtn").textContent=soundOn?"♪":"×";$("sndBtn").style.opacity=soundOn?1:.55;}
+
+/* ---------- game state ---------- */
+let grid,piece,nextQ,score,state="title",paused=false,fallT=0,lockT=0,chain=0,maxChain=0,popping=[],particles=[],texts=[],shake=0,softDrop=false,totalPops=0;
+const rnd=()=>1+(Math.random()*4|0);
+const OFF=[[0,-1],[1,0],[0,1],[-1,0]];
+function newPiece(){const p=nextQ.shift();nextQ.push([rnd(),rnd()]);return {x:2,y:0,rot:0,a:p[0],b:p[1]};}
+function cellsOf(p){const o=OFF[p.rot];return [[p.x,p.y,p.a],[p.x+o[0],p.y+o[1],p.b]];}
+function free(x,y){if(x<0||x>=COLS||y>=ROWS)return false;if(y<0)return true;return !grid[y][x];}
+function fits(p){return cellsOf(p).every(([x,y])=>free(x,y));}
+
+function reset(){
+  grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));
+  nextQ=[[rnd(),rnd()],[rnd(),rnd()]];score=0;chain=0;maxChain=0;totalPops=0;
+  popping=[];particles=[];texts=[];paused=false;softDrop=false;
+  piece=newPiece();fallT=0;lockT=0;state="play";updHud();
+}
+function speed(){return Math.max(160,720-Math.floor(totalPops/20)*45);}
+
+function tryMove(dx){if(state!=="play"||paused)return;const p={...piece,x:piece.x+dx};if(fits(p)){piece=p;lockT=0;SFX.move();}}
+function tryRot(){
+  if(state!=="play"||paused)return;
+  const r=(piece.rot+1)%4;
+  for(const [dx,dy] of [[0,0],[-1,0],[1,0],[0,-1]]){const p={...piece,rot:r,x:piece.x+dx,y:piece.y+dy};if(fits(p)){piece=p;lockT=0;SFX.rot();return;}}
+  const p={...piece,rot:(piece.rot+2)%4};if(fits(p)){piece=p;SFX.rot();}
+}
+function hardDrop(){if(state!=="play"||paused)return;let n=0;while(fits({...piece,y:piece.y+1})){piece.y++;n++;}score+=n*2;lock();}
+
+function lock(){
+  let top=false;
+  for(const [x,y,c] of cellsOf(piece)){if(y<0){top=true;continue;}grid[y][x]={c,oy:0,sq:0};}
+  SFX.land();piece=null;chain=0;
+  if(top&&!grid[0][2]){/* 画面外に出た分は消える */}
+  gravity();state="resolve";
+}
+function gravity(){
+  let moved=false;
+  for(let x=0;x<COLS;x++){let w=ROWS-1;for(let y=ROWS-1;y>=0;y--){const c=grid[y][x];if(c){if(w!==y){grid[w][x]=c;grid[y][x]=null;c.oy-=(w-y);moved=true;}w--;}}}
+  return moved;
+}
+function findGroups(){
+  const seen=Array.from({length:ROWS},()=>Array(COLS).fill(false)),out=[];
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){
+    const c=grid[y][x];if(!c||seen[y][x])continue;
+    const st=[[x,y]],g=[];seen[y][x]=true;
+    while(st.length){const [cx,cy]=st.pop();g.push([cx,cy]);
+      for(const [dx,dy] of OFF){const nx=cx+dx,ny=cy+dy;if(nx<0||ny<0||nx>=COLS||ny>=ROWS||seen[ny][nx])continue;const n=grid[ny][nx];if(n&&n.c===c.c){seen[ny][nx]=true;st.push([nx,ny]);}}}
+    if(g.length>=4)out.push(g);
+  }
+  return out;
+}
+const CHAIN_POW=[0,8,16,32,64,96,128,160,192,224,256];
+function resolveStep(){
+  const gs=findGroups();
+  if(!gs.length){
+    if(chain>=2){score+=0;}
+    piece=newPiece();
+    if(!fits(piece)){gameOver();return;}
+    state="play";fallT=0;lockT=0;return;
+  }
+  chain++;maxChain=Math.max(maxChain,chain);
+  let n=0;const cols=new Set();
+  for(const g of gs){n+=g.length;for(const [x,y] of g){cols.add(grid[y][x].c);popping.push({x,y,c:grid[y][x].c,t:0});}}
+  const bonus=Math.max(1,(CHAIN_POW[Math.min(chain-1,10)]||0)+(cols.size>1?3*(cols.size-1):0)+gs.reduce((a,g)=>a+(g.length>4?g.length-3:0),0));
+  score+=10*n*bonus;totalPops+=n;
+  SFX.pop(chain);
+  if(chain>=2){texts.push({s:chain+"れんさ！",t:0,big:chain>=4});shake=Math.min(12,3+chain*2);}
+  state="pop";updHud();
+}
+function finishPop(){
+  for(const p of popping){grid[p.y][p.x]=null;burst(p.x,p.y,p.c);}
+  popping=[];gravity();state="resolve";
+}
+function burst(x,y,c){for(let i=0;i<10;i++){const a=Math.random()*Math.PI*2,s=1.5+Math.random()*3.5;particles.push({x:(x+.5)*CS,y:(y+.5)*CS,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2,t:0,c,heart:Math.random()<.35});}}
+function gameOver(){
+  state="over";SFX.over();
+  if(score>best){best=score;store("mio-puni-best",best);}
+  $("overTxt").innerHTML=`スコア <b>${score.toLocaleString()}</b><br>最大れんさ <b>${maxChain}</b>　ベスト <b>${best.toLocaleString()}</b>`;
+  $("overOv").hidden=false;updHud();
+}
+function updHud(){$("score").textContent=score.toLocaleString();$("best").textContent=Math.max(best,score).toLocaleString();drawNext();}
+
+/* ---------- loop ---------- */
+let last=performance.now(),resolveWait=0;
+function frame(now){
+  const dt=Math.min(50,now-last);last=now;
+  if(!paused)update(dt);
+  draw();requestAnimationFrame(frame);
+}
+let holdDir=0,holdT=0;
+function update(dt){
+  // 落下アニメ
+  let settling=false;
+  for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const c=grid&&grid[y][x];if(!c)continue;if(c.oy<0){c.oy=Math.min(0,c.oy+dt*.018);settling=true;if(c.oy===0)c.sq=1;}if(c.sq>0)c.sq=Math.max(0,c.sq-dt*.006);}
+  for(const p of particles){p.t+=dt;p.x+=p.vx;p.y+=p.vy;p.vy+=.18;}
+  particles=particles.filter(p=>p.t<700);
+  for(const t of texts)t.t+=dt;texts=texts.filter(t=>t.t<1100);
+  shake=Math.max(0,shake-dt*.03);
+  if(state==="play"){
+    if(holdDir){holdT+=dt;if(holdT>170){holdT-=60;tryMove(holdDir);}}
+    const iv=softDrop?35:speed();
+    fallT+=dt;
+    if(fallT>=iv){fallT=0;
+      const p={...piece,y:piece.y+1};
+      if(fits(p)){piece=p;if(softDrop)score+=1;lockT=0;}
+    }
+    if(!fits({...piece,y:piece.y+1})){lockT+=dt;if(lockT>(softDrop?120:380))lock();}
+    if(softDrop)updHud();
+  }else if(state==="resolve"){
+    if(!settling){resolveWait+=dt;if(resolveWait>80){resolveWait=0;resolveStep();}}
+  }else if(state==="pop"){
+    for(const p of popping)p.t+=dt;
+    if(popping.length&&popping[0].t>420)finishPop();
+  }
+}
+
+/* ---------- drawing ---------- */
+function puni(g,x,y,s,col,opts={}){
+  const {sq=0,alpha=1,blink=false}=opts;
+  const C=COLORS[col];g.save();g.globalAlpha=alpha;
+  const w=s*(.9+sq*.12),h=s*(.9-sq*.14);
+  g.translate(x+s/2,y+s-(s-h)/2-h/2+ (s-h)/2);
+  const r=w*.38;g.fillStyle=blink?"#fff":C.f;g.strokeStyle=C.d;g.lineWidth=Math.max(1.5,s*.05);
+  g.beginPath();g.roundRect?g.roundRect(-w/2,-h/2,w,h,r):g.rect(-w/2,-h/2,w,h);g.fill();g.stroke();
+  g.fillStyle="rgba(255,255,255,.5)";g.beginPath();g.ellipse(-w*.2,-h*.28,w*.16,h*.08,-.3,0,Math.PI*2);g.fill();
+  g.fillStyle="#1a1030";const ey=-h*.02;g.beginPath();g.arc(-w*.16,ey,s*.07,0,Math.PI*2);g.arc(w*.16,ey,s*.07,0,Math.PI*2);g.fill();
+  g.strokeStyle="#1a1030";g.lineWidth=Math.max(1.2,s*.035);g.beginPath();g.arc(0,h*.1,s*.07,.15*Math.PI,.85*Math.PI);g.stroke();
+  g.fillStyle="rgba(255,120,160,.45)";g.beginPath();g.arc(-w*.3,h*.12,s*.06,0,Math.PI*2);g.arc(w*.3,h*.12,s*.06,0,Math.PI*2);g.fill();
+  g.restore();
+}
+function heart(g,cx,cy,s,col){
+  const C=COLORS[col];g.save();g.translate(cx,cy);g.fillStyle=C.f;g.strokeStyle=C.d;g.lineWidth=2;
+  g.beginPath();g.moveTo(0,s*.35);g.bezierCurveTo(-s*.6,-s*.05,-s*.35,-s*.55,0,-s*.2);g.bezierCurveTo(s*.35,-s*.55,s*.6,-s*.05,0,s*.35);g.fill();g.stroke();
+  g.fillStyle="#1a1030";g.beginPath();g.arc(-s*.12,-s*.05,s*.05,0,Math.PI*2);g.arc(s*.12,-s*.05,s*.05,0,Math.PI*2);g.fill();
+  g.restore();
+}
+function drawNext(){
+  nctx.clearRect(0,0,88,60);if(!nextQ)return;const [a,b]=nextQ[0];
+  heart(nctx,26,32,40,b);heart(nctx,62,32,40,a);
+}
+function draw(){
+  const W=COLS*CS,H=ROWS*CS;
+  ctx.setTransform(DPR,0,0,DPR,0,0);ctx.clearRect(0,0,W,H);
+  ctx.save();if(shake>0)ctx.translate((Math.random()-.5)*shake,(Math.random()-.5)*shake);
+  ctx.strokeStyle="rgba(255,255,255,.04)";ctx.lineWidth=1;
+  for(let x=1;x<COLS;x++){ctx.beginPath();ctx.moveTo(x*CS,0);ctx.lineTo(x*CS,H);ctx.stroke();}
+  // ×マーク（ここが埋まるとゲームオーバー）
+  ctx.strokeStyle="rgba(255,90,120,.35)";ctx.lineWidth=3;const mx=2*CS+CS/2,my=CS/2,m=CS*.22;
+  ctx.beginPath();ctx.moveTo(mx-m,my-m);ctx.lineTo(mx+m,my+m);ctx.moveTo(mx+m,my-m);ctx.lineTo(mx-m,my+m);ctx.stroke();
+  if(grid){
+    const popSet=new Map(popping.map(p=>[p.y*COLS+p.x,p]));
+    for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++){const c=grid[y][x];if(!c)continue;
+      const pp=popSet.get(y*COLS+x);
+      if(pp){const k=pp.t/420;puni(ctx,x*CS,y*CS,CS,c.c,{blink:Math.floor(pp.t/70)%2===0,sq:k,alpha:1-k*.6});}
+      else puni(ctx,x*CS,(y+c.oy)*CS,CS,c.c,{sq:c.sq});}
+    if(piece&&state==="play"){
+      // 着地予想
+      let gp={...piece};while(fits({...gp,y:gp.y+1}))gp.y++;
+      for(const [x,y,c] of cellsOf(gp))if(y>=0){ctx.strokeStyle=COLORS[c].f;ctx.globalAlpha=.35;ctx.lineWidth=2;ctx.setLineDash([4,4]);ctx.strokeRect(x*CS+4,y*CS+4,CS-8,CS-8);ctx.setLineDash([]);ctx.globalAlpha=1;}
+      for(const [x,y,c] of cellsOf(piece))if(y>=0)puni(ctx,x*CS,y*CS,CS,c);
+    }
+  }
+  for(const p of particles){const k=p.t/700;ctx.globalAlpha=1-k;
+    if(p.heart)heart(ctx,p.x,p.y,CS*.35*(1-k*.5),p.c);else{ctx.fillStyle=COLORS[p.c].f;ctx.beginPath();ctx.arc(p.x,p.y,CS*.09*(1-k),0,Math.PI*2);ctx.fill();}
+    ctx.globalAlpha=1;}
+  ctx.restore();
+  for(const t of texts){const k=t.t/1100,sz=CS*(t.big?1.15:.85)*(k<.15?k/.15*1.2:1);
+    ctx.save();ctx.globalAlpha=k>.75?(1-k)/.25:1;ctx.font=`900 ${sz}px sans-serif`;ctx.textAlign="center";ctx.textBaseline="middle";
+    const y=H*.4-k*CS;ctx.lineWidth=6;ctx.strokeStyle="#3a1240";ctx.strokeText(t.s,W/2,y);ctx.fillStyle=t.big?"#ff8ac8":"#ffd45c";ctx.fillText(t.s,W/2,y);ctx.restore();}
+}
+function fit(){
+  const st=$("stage").getBoundingClientRect();
+  CS=Math.floor(Math.min((st.width-4)/COLS,(st.height-4)/ROWS));CS=Math.max(20,CS);
+  DPR=Math.min(3,window.devicePixelRatio||1);
+  cv.width=COLS*CS*DPR;cv.height=ROWS*CS*DPR;cv.style.width=COLS*CS+"px";cv.style.height=ROWS*CS+"px";
+}
+window.addEventListener("resize",fit);
+
+/* ---------- input ---------- */
+function setPause(v){if(state==="title"||state==="over")return;paused=v;$("pauseOv").hidden=!v;$("confirmOv").hidden=true;softDrop=false;holdDir=0;}
+function bindHold(id,on,off){const el=$(id);
+  el.addEventListener("pointerdown",e=>{e.preventDefault();audio();el.classList.add("on");try{el.setPointerCapture(e.pointerId);}catch(_){}on();});
+  ["pointerup","pointercancel","lostpointercapture"].forEach(ev=>el.addEventListener(ev,()=>{el.classList.remove("on");off&&off();}));
+  el.addEventListener("contextmenu",e=>e.preventDefault());}
+bindHold("bL",()=>{tryMove(-1);holdDir=-1;holdT=0;},()=>{if(holdDir===-1)holdDir=0;});
+bindHold("bR",()=>{tryMove(1);holdDir=1;holdT=0;},()=>{if(holdDir===1)holdDir=0;});
+bindHold("bRot",tryRot);
+bindHold("bDown",()=>{softDrop=true;},()=>{softDrop=false;});
+bindHold("bHard",hardDrop);
+window.addEventListener("keydown",e=>{
+  if(e.repeat&&!["ArrowLeft","ArrowRight"].includes(e.code))return;audio();
+  const k=e.code;
+  if(k==="KeyP"||k==="Escape"){setPause(!paused);e.preventDefault();return;}
+  if(paused)return;
+  if(k==="ArrowLeft"){tryMove(-1);e.preventDefault();}
+  else if(k==="ArrowRight"){tryMove(1);e.preventDefault();}
+  else if(k==="ArrowUp"||k==="KeyZ"||k==="KeyX"){tryRot();e.preventDefault();}
+  else if(k==="ArrowDown"){softDrop=true;e.preventDefault();}
+  else if(k==="Space"){hardDrop();e.preventDefault();}
+});
+window.addEventListener("keyup",e=>{if(e.code==="ArrowDown")softDrop=false;});
+document.addEventListener("visibilitychange",()=>{if(document.hidden&&(state==="play"||state==="resolve"||state==="pop"))setPause(true);});
+
+$("pauseBtn").onclick=()=>{audio();setPause(!paused);};
+$("resumeBtn").onclick=()=>setPause(false);
+$("restartBtn").onclick=()=>{$("pauseOv").hidden=true;$("confirmOv").hidden=false;};
+$("noBtn").onclick=()=>{$("confirmOv").hidden=true;$("pauseOv").hidden=false;};
+$("yesBtn").onclick=()=>{$("confirmOv").hidden=true;paused=false;reset();};
+$("sndBtn").onclick=()=>{audio();soundOn=!soundOn;store("mio-puni-sound",soundOn);updSnd();};
+function start(){audio();bgmStart();$("title").hidden=true;$("overOv").hidden=true;reset();}
+$("startBtn").onclick=start;$("againBtn").onclick=start;
+
+updSnd();$("best").textContent=best.toLocaleString();
+grid=Array.from({length:ROWS},()=>Array(COLS).fill(null));nextQ=[[2,1],[3,4]];drawNext();
+fit();requestAnimationFrame(frame);
+window.__puni={get state(){return state;},get score(){return score;},get grid(){return grid;},get piece(){return piece;},get paused(){return paused;},hardDrop,tryMove,tryRot,setGrid(g){grid=g;}};
+})();
+</script>
+</body>
+</html>
