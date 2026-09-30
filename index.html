@@ -231,10 +231,10 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
             <g fill="rgba(255,248,214,.10)"><polygon points="30,30 70,30 150,300 -60,300"/><polygon points="330,30 370,30 460,300 250,300"/></g>
             <g opacity=".7"><rect x="20" y="96" width="4" height="4" fill="#E0413A"/><rect x="60" y="104" width="4" height="4" fill="#2F6FE0"/><rect x="110" y="98" width="4" height="4" fill="#F0B52A"/><rect x="160" y="106" width="4" height="4" fill="#E8E4D8"/><rect x="210" y="96" width="4" height="4" fill="#2E9E55"/><rect x="260" y="104" width="4" height="4" fill="#E0413A"/><rect x="300" y="98" width="4" height="4" fill="#B06AD8"/><rect x="370" y="104" width="4" height="4" fill="#2F6FE0"/></g>
             <rect x="0" y="126" width="400" height="3" fill="#FFD23F"/>
-            <polygon points="200,150 300,215 200,285 100,215" fill="#B9824C"/>
+            <g transform="translate(80,50) scale(.6)"><polygon points="200,150 300,215 200,285 100,215" fill="#B9824C"/>
             <polygon points="200,172 268,215 200,262 132,215" fill="#3F9A4A"/>
             <g fill="#fff"><rect x="196" y="146" width="8" height="6"/><rect x="294" y="212" width="8" height="6"/><rect x="98" y="212" width="8" height="6"/><rect x="195" y="276" width="10" height="7"/></g>
-            <ellipse cx="200" cy="216" rx="14" ry="6" fill="#A8733F"/>
+            <ellipse cx="200" cy="216" rx="14" ry="6" fill="#A8733F"/></g>
           </svg>
           <div class="badge"><span class="pill on">体験版 公開中</span><span class="pill soon">製品版 準備中</span></div>
           <div class="title"><small>PIXEL BASEBALL</small><b id="g2">ミオスタジアム</b></div>
@@ -252,7 +252,7 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
           </dl>
           <div class="cta">
             <a class="btn main" href="games/mio-stadium/index.html">体験版をあそぶ</a>
-            <a class="btn sub" href="#voice">感想を送る</a>
+            <a class="btn sub" id="feedbackStadium" href="#voice" aria-disabled="true">感想 準備中</a>
           </div>
         </div>
       </article>
@@ -319,11 +319,15 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
 /* ===== 設定：感想フォームのURL（Googleフォームなど）を入れると「感想を送る」ボタンが使えるようになる ===== */
 /* お問い合わせフォーム（広告・取材など）のURL */
 const CONTACT_URL='';
+const FEEDBACK_URL_STADIUM='';
 const FEEDBACK_URL='https://docs.google.com/forms/d/1jjGtsflNr9svG_j2bN4F_AuUwkKUy0G1g10yJRQ6TNo/viewform';
 (()=>{
   const b=document.getElementById('feedbackBtn');
   if(FEEDBACK_URL){b.href=FEEDBACK_URL;b.target='_blank';b.rel='noopener';b.textContent='感想を送る';b.removeAttribute('aria-disabled');}
   else b.addEventListener('click',e=>e.preventDefault());
+  const fs=document.getElementById('feedbackStadium');
+  if(FEEDBACK_URL_STADIUM){fs.href=FEEDBACK_URL_STADIUM;fs.target='_blank';fs.rel='noopener';fs.textContent='感想を送る';fs.removeAttribute('aria-disabled');}
+  else fs.addEventListener('click',e=>e.preventDefault());
   const c=document.getElementById('contactBtn');
   if(CONTACT_URL){c.href=CONTACT_URL;c.target='_blank';c.rel='noopener';c.textContent='お問い合わせ';c.removeAttribute('aria-disabled');}
   else c.addEventListener('click',e=>e.preventDefault());
