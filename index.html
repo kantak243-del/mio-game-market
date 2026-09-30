@@ -109,6 +109,10 @@ section{padding-block:56px}
 .key.stadium svg{position:absolute;inset:0;width:100%;height:100%}
 .key.stadium .title b{color:#FFD23F;text-shadow:0 0 16px rgba(255,210,63,.55),0 3px 0 #000}
 .key.stadium .title small{color:#FFD23F}
+.key.hunt{background:linear-gradient(180deg,#2A1410 0%,#5A2414 45%,#8A3A18 62%,#3A2418 62%,#241812 100%)}
+.key.hunt svg{position:absolute;inset:0;width:100%;height:100%}
+.key.hunt .title b{color:#FFE2B8;text-shadow:0 0 18px rgba(255,120,40,.75),0 3px 0 #2A0E06}
+.key.hunt .title small{color:#FFC89A}
 .more{margin-top:18px;border:1px dashed var(--line);border-radius:16px;padding:16px 18px;color:var(--dim);font-size:14px;display:flex;gap:10px;align-items:center}
 .more .lan-s{flex:none;width:14px;height:18px;border-radius:6px;background:var(--line)}
 
@@ -257,6 +261,41 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
         </div>
       </article>
 
+      <article class="stall" aria-labelledby="g3">
+        <div class="key hunt">
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <circle cx="300" cy="120" r="46" fill="#FF9A3C" opacity=".35"/>
+            <polygon points="0,190 60,120 110,170 170,100 230,165 290,110 350,160 400,125 400,190" fill="#3A1E16"/>
+            <g fill="#140A08">
+              <path d="M150 178 C170 140 215 128 245 138 L262 118 L268 142 C285 150 292 165 288 178 Z"/>
+              <path d="M205 140 C190 105 160 90 120 88 C150 104 168 120 178 142 Z"/>
+              <path d="M225 138 C240 100 275 85 318 86 C288 104 268 120 252 142 Z"/>
+              <path d="M152 170 C120 168 92 158 70 140 C88 166 118 182 152 182 Z"/>
+            </g>
+            <g fill="#FF7A2A"><path d="M70 140 C58 126 60 110 72 100 C70 116 80 122 78 134 Z"/><path d="M66 128 C52 122 48 106 54 96 C58 110 66 114 70 124 Z" fill="#FFC24A"/></g>
+            <g fill="#FFB25A" opacity=".8"><circle cx="90" cy="80" r="2"/><circle cx="120" cy="60" r="1.5"/><circle cx="330" cy="70" r="2"/><circle cx="360" cy="95" r="1.5"/><circle cx="60" cy="60" r="1.5"/></g>
+          </svg>
+          <div class="badge"><span class="pill on">体験版 公開中</span><span class="pill soon">製品版 準備中</span></div>
+          <div class="title"><small>HUNTING ACTION</small><b id="g3">焔尾竜討伐</b></div>
+        </div>
+        <div class="info">
+          <p>谷に居座る<strong>焔尾竜ヴァルグ</strong>を狩りに行こう。太刀・大剣・双剣・弓・鎚から武器を選び、素材で強化しながら<strong>4頭の竜</strong>に挑む<strong>3Dハンティングアクション</strong>です。</p>
+          <ul class="tags" aria-label="ジャンル">
+            <li>3Dアクション</li><li>狩猟</li><li>武器5種</li><li>装備強化</li>
+          </ul>
+          <dl class="spec">
+            <dt>あそびかた</dt><dd>左で移動・右でカメラ、攻撃ボタンをタップ</dd>
+            <dt>ボリューム</dt><dd>1クエスト 数分〜（★4〜★10の4クエスト）</dd>
+            <dt>セーブ</dt><dd>自動（遊んでいる端末に保存）</dd>
+            <dt>価格</dt><dd>プレオープン中は無料</dd>
+          </dl>
+          <div class="cta">
+            <a class="btn main" href="games/enbiryu/index.html">体験版をあそぶ</a>
+            <a class="btn sub" id="feedbackHunt" href="#voice" aria-disabled="true">感想 準備中</a>
+          </div>
+        </div>
+      </article>
+
       <div class="more"><span class="lan-s" aria-hidden="true"></span>次の屋台を準備中です。新しい体験版が並んだら、ここに出ます。</div>
     </div>
   </section>
@@ -319,6 +358,7 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
 /* ===== 設定：感想フォームのURL（Googleフォームなど）を入れると「感想を送る」ボタンが使えるようになる ===== */
 /* お問い合わせフォーム（広告・取材など）のURL */
 const CONTACT_URL='';
+const FEEDBACK_URL_HUNT='';
 const FEEDBACK_URL_STADIUM='https://docs.google.com/forms/d/1wu7ISAB2KDcEx5VefsQ616jztAMt6okmvZ4G6B-nsXQ/viewform';
 const FEEDBACK_URL='https://docs.google.com/forms/d/1jjGtsflNr9svG_j2bN4F_AuUwkKUy0G1g10yJRQ6TNo/viewform';
 (()=>{
@@ -328,6 +368,9 @@ const FEEDBACK_URL='https://docs.google.com/forms/d/1jjGtsflNr9svG_j2bN4F_AuUwkK
   const fs=document.getElementById('feedbackStadium');
   if(FEEDBACK_URL_STADIUM){fs.href=FEEDBACK_URL_STADIUM;fs.target='_blank';fs.rel='noopener';fs.textContent='感想を送る';fs.removeAttribute('aria-disabled');}
   else fs.addEventListener('click',e=>e.preventDefault());
+  const fh=document.getElementById('feedbackHunt');
+  if(FEEDBACK_URL_HUNT){fh.href=FEEDBACK_URL_HUNT;fh.target='_blank';fh.rel='noopener';fh.textContent='感想を送る';fh.removeAttribute('aria-disabled');}
+  else fh.addEventListener('click',e=>e.preventDefault());
   const c=document.getElementById('contactBtn');
   if(CONTACT_URL){c.href=CONTACT_URL;c.target='_blank';c.rel='noopener';c.textContent='お問い合わせ';c.removeAttribute('aria-disabled');}
   else c.addEventListener('click',e=>e.preventDefault());
