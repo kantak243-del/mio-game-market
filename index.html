@@ -113,6 +113,11 @@ section{padding-block:56px}
 .key.hunt svg{position:absolute;inset:0;width:100%;height:100%}
 .key.hunt .title b{color:#FFE2B8;text-shadow:0 0 18px rgba(255,120,40,.75),0 3px 0 #2A0E06}
 .key.hunt .title small{color:#FFC89A}
+.key.app{background:linear-gradient(180deg,#0F2A3A 0%,#12403F 60%,#1B5A4A 100%)}
+.key.app svg{position:absolute;inset:0;width:100%;height:100%}
+.key.app .title b{color:#E6FFF4;text-shadow:0 0 16px rgba(111,224,184,.7),0 3px 0 #08261C}
+.key.app .title small{color:#9DF0D2}
+.pill.cat{background:var(--lantern);color:#2B1500}
 .key.puni{background:#111B3B}
 .key.puni svg{position:absolute;inset:0;width:100%;height:100%}
 .key.puni .title b{color:#FFF1FA;text-shadow:0 0 16px rgba(255,140,200,.7),0 3px 0 #3A1240}
@@ -174,7 +179,7 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
       <span><b>ミオのゲームアプリ販売所</b><small>MIO GAME MARKET</small></span>
     </a>
     <nav aria-label="ページ内">
-      <a href="#games">体験版</a><a href="#grow">みんなで育てる</a><a href="#voice">感想</a><a href="#faq">質問</a>
+      <a href="#games">ゲーム・アプリ</a><a href="#grow">みんなで育てる</a><a href="#voice">感想</a><a href="#faq">質問</a>
     </nav>
   </div>
 </header>
@@ -189,9 +194,9 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
       <div>
       <h1><span class="en">MIO GAME MARKET</span>ミオの<br>ゲームアプリ販売所</h1>
       <p class="catch">あなたの「作ってみた」を、<br>誰かの「<em>楽しい！</em>」へ。</p>
-      <p class="lead">AIといっしょに作った<strong>スマホゲーム</strong>の小さなお店。まずは<strong>体験版</strong>を並べて、遊んだ人の感想で少しずつ良くしていきます。</p>
+      <p class="lead">AIといっしょに作った<strong>スマホゲーム</strong>や<strong>便利アプリ</strong>の小さなお店。まずは<strong>体験版</strong>を並べて、遊んだ人の感想で少しずつ良くしていきます。</p>
       <div class="cta">
-        <a class="btn main" href="#games">体験版を見る</a>
+        <a class="btn main" href="#games">ゲーム・アプリを見る</a>
         <a class="btn sub" href="#grow">このお店のしくみ</a>
       </div>
       <div class="mio-say">
@@ -205,7 +210,7 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
 
   <section id="games">
     <div class="wrap">
-      <div class="sec-h"><h2>体験版コーナー</h2><span>NOW PLAYING</span></div>
+      <div class="sec-h"><h2>体験版コーナー</h2><span>GAMES &amp; APPS</span></div>
 
       <article class="stall" aria-labelledby="g1">
         <div class="key">
@@ -329,7 +334,38 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
         </div>
       </article>
 
-      <div class="more"><span class="lan-s" aria-hidden="true"></span>次の屋台を準備中です。新しい体験版が並んだら、ここに出ます。</div>
+      <article class="stall" aria-labelledby="g5">
+        <div class="key app">
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <circle cx="300" cy="90" r="70" fill="#6FE0B8" opacity=".12"/>
+            <path d="M200 70 L270 96 L270 160 C270 200 238 224 200 238 C162 224 130 200 130 160 L130 96 Z" fill="#1E6B58" stroke="#6FE0B8" stroke-width="3"/>
+            <path d="M200 112 C186 96 160 108 168 130 C174 148 200 164 200 164 C200 164 226 148 232 130 C240 108 214 96 200 112 Z" fill="#FF8FA8"/>
+            <path d="M60 210 Q80 180 100 210 Q80 230 60 210 Z" fill="#6FD3FF" opacity=".8"/>
+            <path d="M320 200 Q335 176 350 200 Q335 218 320 200 Z" fill="#6FD3FF" opacity=".8"/>
+            <g fill="#9DF0D2" opacity=".8"><circle cx="50" cy="60" r="2"/><circle cx="110" cy="40" r="1.5"/><circle cx="350" cy="50" r="2"/><circle cx="370" cy="130" r="1.5"/></g>
+          </svg>
+          <div class="badge"><span class="pill cat">アプリ（ゲームではありません）</span><span class="pill on">公開中</span></div>
+          <div class="title"><small>HEALTH COMPANION</small><b id="g5">MAMORU</b></div>
+        </div>
+        <div class="info">
+          <p>毎日の<strong>体調・睡眠・歩数・水分</strong>をかんたんに記録できる<strong>健康管理アプリ</strong>。ひとことメモや、MAMORUとのおしゃべりで、無理しすぎない毎日を見守ります。</p>
+          <ul class="tags" aria-label="ジャンル">
+            <li>健康管理</li><li>体調記録</li><li>睡眠・歩数</li><li>水分チェック</li>
+          </ul>
+          <dl class="spec">
+            <dt>種類</dt><dd>ゲーム以外のアプリ（健康管理）</dd>
+            <dt>あそびかた</dt><dd>ブラウザで開いて、今日の体調をタップして記録</dd>
+            <dt>ご注意</dt><dd>診断を行うものではありません。強い症状のときは医療機関へ</dd>
+            <dt>価格</dt><dd>プレオープン中は無料</dd>
+          </dl>
+          <div class="cta">
+            <a class="btn main" href="https://mamoru-health.floot.app" target="_blank" rel="noopener">アプリをひらく</a>
+            <a class="btn sub" id="feedbackMamoru" href="#voice" aria-disabled="true">感想 準備中</a>
+          </div>
+        </div>
+      </article>
+
+      <div class="more"><span class="lan-s" aria-hidden="true"></span>次の屋台を準備中です。新しいゲームやアプリが並んだら、ここに出ます。</div>
     </div>
   </section>
 
@@ -371,7 +407,7 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
     <div class="wrap">
       <div class="sec-h"><h2>よくある質問</h2><span>FAQ</span></div>
       <div class="faq">
-        <details><summary>お金はかかりますか？</summary><p>プレオープン中は、体験版をすべて無料で遊べます。登録も必要ありません。</p></details>
+        <details><summary>お金はかかりますか？</summary><p>プレオープン中は、ゲームもアプリもすべて無料で使えます。登録も必要ありません。</p></details>
         <details><summary>アプリのインストールは必要？</summary><p>いりません。スマホやパソコンのブラウザで、ボタンを押すだけで遊べます。ホーム画面に追加すると、アプリのように開けます。</p></details>
         <details><summary>セーブはどこに残りますか？</summary><p>遊んでいる端末のブラウザに自動で保存されます。別の端末に移すときは、ゲーム内のセーブ画面にある「ふっかつのじゅもん」を使ってください。</p></details>
         <details><summary>製品版はいつ出ますか？</summary><p>体験版への感想をもとに仕上げてから販売します。決まったら、このページでお知らせします。</p></details>
@@ -408,6 +444,9 @@ const FEEDBACK_URL='https://docs.google.com/forms/d/1jjGtsflNr9svG_j2bN4F_AuUwkK
   const fp=document.getElementById('feedbackPuni');
   if(FEEDBACK_URL_PUNI){fp.href=FEEDBACK_URL_PUNI;fp.target='_blank';fp.rel='noopener';fp.textContent='感想を送る';fp.removeAttribute('aria-disabled');}
   else fp.addEventListener('click',e=>e.preventDefault());
+  const fm=document.getElementById('feedbackMamoru');
+  if(FEEDBACK_URL){fm.href=FEEDBACK_URL;fm.target='_blank';fm.rel='noopener';fm.textContent='感想を送る';fm.removeAttribute('aria-disabled');}
+  else fm.addEventListener('click',e=>e.preventDefault());
   const c=document.getElementById('contactBtn');
   if(CONTACT_URL){c.href=CONTACT_URL;c.target='_blank';c.rel='noopener';c.textContent='お問い合わせ';c.removeAttribute('aria-disabled');}
   else c.addEventListener('click',e=>e.preventDefault());
