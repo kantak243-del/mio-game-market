@@ -122,6 +122,20 @@ section{padding-block:56px}
 .key.puni svg{position:absolute;inset:0;width:100%;height:100%}
 .key.puni .title b{color:#FFF1FA;text-shadow:0 0 16px rgba(255,140,200,.7),0 3px 0 #3A1240}
 .key.puni .title small{color:#FFB8DC}
+.key.block{background:linear-gradient(180deg,#14305A 0%,#3C86C8 55%,#2E7FB0 56%,#1B5E8C 100%)}
+.key.block svg{position:absolute;inset:0;width:100%;height:100%}
+.key.block .title b{color:#FFFFFF;text-shadow:0 0 16px rgba(120,210,255,.7),0 3px 0 #0A2540}
+.key.block .title small{color:#CDEBFF}
+.guide{background:var(--night2);border-radius:14px;padding:4px 16px}
+.guide summary{cursor:pointer;font-weight:700;padding-block:10px;list-style:none;display:flex;justify-content:space-between;gap:10px}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary::after{content:"＋";color:var(--lantern)}
+.guide[open] summary::after{content:"－"}
+.guide ol{margin:0 0 10px;padding-left:1.4em;color:var(--dim);font-size:14px;display:grid;gap:8px}
+.guide ol li strong{color:var(--ink)}
+.guide .url{word-break:break-all;color:var(--lantern)}
+.guide .done{margin:0 0 12px;color:var(--ink);font-size:14px}
+.guide .note{margin:0 0 12px;color:var(--dim);font-size:13px}
 .more{margin-top:18px;border:1px dashed var(--line);border-radius:16px;padding:16px 18px;color:var(--dim);font-size:14px;display:flex;gap:10px;align-items:center}
 .more .lan-s{flex:none;width:14px;height:18px;border-radius:6px;background:var(--line)}
 
@@ -361,6 +375,45 @@ footer b{font-family:var(--pixel);font-weight:400;color:var(--ink)}
           <div class="cta">
             <a class="btn main" href="https://mamoru-health.floot.app" target="_blank" rel="noopener">アプリをひらく</a>
             <a class="btn sub" id="feedbackMamoru" href="#voice" aria-disabled="true">感想 準備中</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="stall" aria-labelledby="g6">
+        <div class="key block">
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <ellipse cx="200" cy="215" rx="150" ry="34" fill="#1B5E8C" opacity=".6"/>
+            <rect x="90" y="170" width="220" height="40" rx="6" fill="#8A5A2B"/>
+            <rect x="90" y="150" width="220" height="24" rx="6" fill="#5DBB63"/>
+            <rect x="130" y="108" width="44" height="44" rx="5" fill="#E8B04A"/>
+            <rect x="174" y="108" width="44" height="44" rx="5" fill="#F2C766"/>
+            <rect x="152" y="64" width="44" height="44" rx="5" fill="#FF8AC8"/>
+            <rect x="240" y="124" width="44" height="28" rx="5" fill="#6FD3FF"/>
+            <g fill="#fff" opacity=".8"><circle cx="50" cy="60" r="2"/><circle cx="330" cy="50" r="1.5"/><circle cx="360" cy="110" r="2"/></g>
+          </svg>
+          <div class="badge"><span class="pill on">体験版 公開中</span><span class="pill soon">製品版 準備中</span></div>
+          <div class="title"><small>BLOCK ISLAND</small><b id="g6">ミオのブロック島</b></div>
+        </div>
+        <div class="info">
+          <p>ブロックの島で遊べる、<strong>スマホ向けのゲーム</strong>です。ホーム画面に追加すると、アプリのようにアイコンから遊べます。</p>
+          <dl class="spec">
+            <dt>あそびかた</dt><dd>ブラウザで開いて、そのまま遊べます</dd>
+            <dt>価格</dt><dd>プレオープン中は無料</dd>
+          </dl>
+          <details class="guide">
+            <summary>🎮 スマホに登録する方法（iPhone）</summary>
+            <p class="done">ホーム画面に追加すると、アプリのようにアイコンから遊べます😊</p>
+            <ol>
+              <li>下の「あそぶ」ボタン、または次のリンクを<strong>Safari（青いコンパスのアプリ）</strong>で開きます。<br><span class="url">https://mio-block-island.joykio.chatgpt.site</span></li>
+              <li>共有ボタン<strong>「□に↑」</strong>を押します。</li>
+              <li><strong>「ホーム画面に追加」</strong>を選びます。<br>見当たらない場合は、共有メニューを下へスクロールしてください。</li>
+              <li>名前を確認して<strong>「追加」</strong>を押します。<br>「Webアプリとして開く」が表示されたら、オンにしてください。</li>
+            </ol>
+            <p class="done">これで登録完了✨<br>ホーム画面の「ミオのブロック島」のアイコンを押して遊んでね！</p>
+            <p class="note">※別のブラウザで開いた場合は、リンクをコピーしてSafariのアドレス欄に貼り付けてください。</p>
+          </details>
+          <div class="cta">
+            <a class="btn main" href="https://mio-block-island.joykio.chatgpt.site" target="_blank" rel="noopener">体験版をあそぶ</a>
           </div>
         </div>
       </article>
